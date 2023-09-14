@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  app:
+    image: 'springboot-docker:latest'
+    build:
+      context: .
+    container_name: app-backend
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5433/employees
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    expose:
+      - "8085"
+    ports:
+      - "8085:8085"
+
+          
+  db:
+    image: postgres:latest
+    container_name: postgres
+    expose:
+      - "5433" # Publishes 5433 to other containers but NOT to host machine
+    ports:
+      - "5433:5433"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      
+    command: -p 5433   # Change postgres port
